@@ -1,0 +1,31 @@
+{
+  "linear": {
+    "api_key": "",
+    "api_url": "https://api.linear.app/graphql"
+  },
+  "zoom": {
+    "scrum_master_user_id": "",
+    "caption_window_seconds": 2
+  },
+  "slack": {
+    "enabled": false,
+    "webhook_url": "",
+    "channel": "#engineering"
+  },
+  "parsing": {
+    "trigger_phrase": "please create issue",
+    "field_keywords": {
+      "team": "team",
+      "project": "project",
+      "cycle": "cycle",
+      "due_date": "due date",
+      "priority": "priority",
+      "assignee": "assignee",
+      "label": ["label", "labels"],
+      "title": "title",
+      "description": "description"
+    },
+    "transcript_excerpt_seconds": 10
+  }
+}
+
