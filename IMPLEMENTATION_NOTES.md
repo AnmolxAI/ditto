@@ -4,14 +4,30 @@
 
 Accessing Zoom captions in real-time on macOS is challenging. This implementation provides three approaches:
 
-### 1. Accessibility API (Primary)
+### 1. Accessibility API (Primary - Fully Implemented)
 - Uses `AppKit` and `ApplicationServices` to access Zoom's UI elements
 - Requires Accessibility permissions in System Preferences
-- May need to access Zoom's internal caption overlay elements
-- **Note**: This is a simplified implementation. A production version would need to:
-  - Identify Zoom's caption window/overlay
-  - Read caption text from accessibility elements
-  - Extract speaker information from Zoom's UI
+- **Implementation Details:**
+  - Finds Zoom application process using `NSWorkspace`
+  - Creates accessibility element for Zoom app using `AXUIElementCreateApplication`
+  - Recursively traverses the accessibility tree to find caption text
+  - Searches for static text elements that contain caption content
+  - Filters out UI control text (buttons, menus, etc.)
+  - Detects changes in caption text to capture new segments
+  - Extracts speaker information from caption text when available (format: "Speaker Name: text")
+  - Tracks last seen caption to avoid duplicate processing
+  - Refreshes app reference periodically to handle Zoom restarts
+- **Requirements:**
+  - macOS Accessibility permissions (System Settings → Privacy & Security → Accessibility)
+  - Zoom application running with captions enabled
+  - PyObjC framework (usually included with Python on macOS)
+- **How it works:**
+  1. Locates Zoom application in running processes
+  2. Accesses Zoom's accessibility tree via macOS Accessibility API
+  3. Searches through UI hierarchy for text elements containing captions
+  4. Monitors for changes in caption text (polls every 500ms)
+  5. Extracts new caption segments with text, speaker, and timestamp
+  6. Passes captions to the command parser for processing
 
 ### 2. File-based Listener (Alternative)
 - Monitors Zoom's caption file if it writes captions to disk

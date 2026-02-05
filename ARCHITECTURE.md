@@ -41,10 +41,18 @@ Ditto is a meeting-native operational assistant that listens for explicit, speak
 - Implements issue creation workflow
 
 ### 2. `zoom_listener.py` - Caption Capture
-- **ZoomListener**: Uses macOS Accessibility API to read Zoom captions
+- **ZoomListener**: Uses macOS Accessibility API to read Zoom captions in real-time
+  - Finds Zoom application process
+  - Traverses accessibility tree to locate caption text
+  - Monitors for changes (polls every 500ms)
+  - Extracts speaker information when available
+  - Requires macOS Accessibility permissions
 - **ZoomCaptionFileListener**: Monitors Zoom caption file (if available)
+  - Alternative method if Zoom saves captions to disk
+  - Checks common file locations
 - **MockZoomListener**: Interactive testing mode
-- Provides speaker attribution and timestamp
+  - For development and testing without Zoom
+- All listeners provide speaker attribution and timestamp
 
 ### 3. `command_parser.py` - Field Extraction
 - Keyword-based parsing (no semantic inference)
@@ -136,14 +144,24 @@ See `config.json` for:
 
 ## Limitations & Notes
 
-1. **Zoom Caption Access**: macOS Accessibility API access is complex. Production may need:
-   - Custom Zoom integration
-   - Zoom API (if available)
-   - Third-party caption service
+1. **Zoom Caption Access**: 
+   - Uses macOS Accessibility API to read captions from Zoom's UI
+   - Requires Accessibility permissions (System Settings → Privacy & Security → Accessibility)
+   - Captions must be visible on screen for the API to read them
+   - Alternative file-based listener available if Zoom saves captions to disk
+   - May need adjustments if Zoom's UI structure changes significantly
 
-2. **Speaker Detection**: Depends on Zoom providing speaker attribution in captions
+2. **Speaker Detection**: 
+   - Depends on Zoom providing speaker attribution in captions
+   - Matches speaker by user ID/email/display name from config
+   - Verifies speaker within ±2 second window (configurable)
 
-3. **Real-time Processing**: Commands processed as spoken, no post-meeting analysis
+3. **Real-time Processing**: 
+   - Commands processed as spoken, no post-meeting analysis
+   - Polls for captions every 500ms
+   - Processes commands 2 seconds after trigger phrase
 
-4. **No Learning**: System doesn't learn from past meetings or improve over time
+4. **No Learning**: 
+   - System doesn't learn from past meetings or improve over time
+   - Strict keyword-based parsing, no semantic inference
 

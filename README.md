@@ -61,8 +61,34 @@ See `config.json` for all configuration options.
 
 ## Requirements
 
-- macOS (for Zoom caption access)
-- Python 3.8+
-- Linear API key
-- Zoom meeting with captions enabled
+- **macOS** (for Zoom caption access via Accessibility API)
+- **Python 3.8+**
+- **Linear API key** (get from https://linear.app/settings/api)
+- **Zoom meeting with captions enabled**
+- **macOS Accessibility permissions** (System Settings → Privacy & Security → Accessibility)
+
+## Setup
+
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Grant Accessibility Permissions
+Ditto needs permission to read Zoom captions:
+1. Open **System Settings** → **Privacy & Security** → **Accessibility**
+2. Add **Terminal** (or your IDE) and enable it
+3. Restart Terminal/IDE after granting permissions
+
+### 3. Configure
+Edit `config.json`:
+- Set `linear.api_key` (from https://linear.app/settings/api)
+- Set `zoom.scrum_master_user_id` (your Zoom email or display name)
+
+### 4. Run
+```bash
+python ditto.py
+```
+
+Make sure Zoom is running with captions enabled!
 

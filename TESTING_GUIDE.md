@@ -91,28 +91,37 @@ If Zoom saves captions to a file, this is the easiest method:
 
 ## Step 6: Test with Zoom (Accessibility API - Production)
 
-For real-time caption reading:
+For real-time caption reading using the macOS Accessibility API:
 
-1. **Make sure Zoom is running** with captions enabled
-2. **Run Ditto:**
+1. **Make sure Zoom is running** with captions enabled and visible on screen
+2. **Verify Accessibility permissions** are granted (Step 4)
+3. **Run Ditto:**
    ```bash
    python ditto.py
    ```
 
-3. **You should see:**
+4. **You should see:**
    ```
    Starting Ditto...
    Scrum master user ID: anmolk0301@gmail.com
    Trigger phrase: 'please create issue'
    Listening to Zoom captions (scrum master: anmolk0301@gmail.com)...
+   Note: Make sure Zoom captions are enabled and Accessibility permissions are granted.
    ```
 
-4. **In your Zoom meeting, speak clearly:**
+5. **In your Zoom meeting, speak clearly:**
    > "Please create issue title login bug team platform priority urgent"
 
-5. **Wait 2-3 seconds** for Ditto to process the command
+6. **Wait 2-3 seconds** for Ditto to process the command
 
-6. **Check terminal output** for success/error messages
+7. **Check terminal output** for success/error messages
+
+**How it works:**
+- Ditto uses the macOS Accessibility API to read caption text directly from Zoom's UI
+- It searches through Zoom's accessibility tree to find caption elements
+- Captions are detected in real-time as they appear on screen
+- The system polls every 500ms for new caption text
+- Only new/changed captions are processed to avoid duplicates
 
 ## Step 7: Example Test Commands
 
@@ -142,10 +151,13 @@ Try these commands in your Zoom meeting:
 
 ### Issue: No captions detected
 - **Check:**
-  1. Are captions enabled in Zoom meeting?
-  2. Are captions visible on your screen?
-  3. Did you grant Accessibility permissions?
+  1. Are captions enabled in Zoom meeting? (Click "Live Transcript" button)
+  2. Are captions visible on your screen? (Accessibility API reads what's displayed)
+  3. Did you grant Accessibility permissions? (System Settings → Privacy & Security → Accessibility)
   4. Try restarting Terminal/IDE after granting permissions
+  5. Make sure Zoom is the active/focused application
+  6. Verify PyObjC is installed: `pip install pyobjc-framework-ApplicationServices`
+  7. Try using `--use-file-listener` as an alternative if Zoom saves captions to file
 
 ### Issue: "Speaker not detected" or commands not triggering
 - **Check:**

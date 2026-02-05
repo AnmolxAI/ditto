@@ -203,21 +203,32 @@ Ditto needs permission to read Zoom captions:
    - Click **"Live Transcript"** button in Zoom toolbar
    - Select **"Enable Auto-Transcription"** or **"Enable Live Transcript"**
    - Make sure captions are visible on screen
+   - Captions must be displayed on screen for the Accessibility API to read them
 
 3. **Verify your identity:**
    - Check that your Zoom display name matches `scrum_master_user_id` in `config.json`
    - Or update `config.json` with your actual Zoom display name
+   - The system matches speaker by the identifier shown in Zoom captions
 
 ### Step 3: Run Ditto
 
-**Option A: File-based Listener** (if Zoom saves captions to file)
+**Option A: Real-time Listener (Accessibility API - Recommended)**
+```bash
+python ditto.py
+```
+
+This uses the macOS Accessibility API to read captions directly from Zoom's UI in real-time.
+
+**Option B: File-based Listener** (if Zoom saves captions to file)
 ```bash
 python ditto.py --use-file-listener
 ```
 
-**Option B: Real-time Listener** (Accessibility API)
+This monitors a caption file that Zoom writes to disk (if enabled in Zoom settings).
+
+**Option C: Mock Mode** (for testing without Zoom)
 ```bash
-python ditto.py
+python ditto.py --mock
 ```
 
 You should see:
@@ -226,6 +237,7 @@ Starting Ditto...
 Scrum master user ID: your-email@example.com
 Trigger phrase: 'please create issue'
 Listening to Zoom captions (scrum master: your-email@example.com)...
+Note: Make sure Zoom captions are enabled and Accessibility permissions are granted.
 ```
 
 ### Step 4: Speak Commands in Zoom
@@ -293,9 +305,12 @@ label bug
 ### Issue: No captions detected
 **Check:**
 1. Are captions enabled in Zoom meeting? (Click "Live Transcript" button)
-2. Are captions visible on your screen?
+2. Are captions visible on your screen? (The Accessibility API reads what's displayed)
 3. Did you grant Accessibility permissions? (System Settings → Privacy & Security → Accessibility)
 4. Try restarting Terminal/IDE after granting permissions
+5. Make sure Zoom is the active/focused application
+6. Try using `--use-file-listener` if Zoom saves captions to a file
+7. Check that PyObjC is installed: `pip install pyobjc-framework-ApplicationServices`
 
 ### Issue: "Speaker not detected" or commands not triggering
 **Check:**

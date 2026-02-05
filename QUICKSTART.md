@@ -7,19 +7,25 @@
 pip install -r requirements.txt
 ```
 
-2. **Configure `config.json`:**
+2. **Grant Accessibility Permissions:**
+   - Open **System Settings** → **Privacy & Security** → **Accessibility**
+   - Add **Terminal** (or your IDE) and enable it
+   - **Restart Terminal/IDE** after granting permissions
+
+3. **Configure `config.json`:**
    - Add your Linear API key: `linear.api_key`
    - Set scrum master Zoom user ID: `zoom.scrum_master_user_id`
    - Optionally configure Slack webhook
 
-3. **Get Linear API Key:**
+4. **Get Linear API Key:**
    - Go to https://linear.app/settings/api
    - Create a new API key
    - Copy it to `config.json`
 
-4. **Find Zoom User ID:**
+5. **Find Zoom User ID:**
    - The scrum master's Zoom user ID (usually their email or display name)
    - This is used to verify speaker identity
+   - Should match how your name appears in Zoom captions
 
 ## Testing
 
@@ -40,10 +46,15 @@ If Zoom writes captions to a file:
 python ditto.py --use-file-listener
 ```
 
-### Production Mode
+### Production Mode (Accessibility API)
 ```bash
 python ditto.py
 ```
+
+**Requirements:**
+- Zoom running with captions enabled
+- Accessibility permissions granted
+- Captions visible on screen
 
 ## Example Commands
 
